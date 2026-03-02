@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{% static 'tasks/favicon.ico' %}" type="image/x-icon">
+  <link rel="stylesheet" href="{% static 'tasks/style.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <title>To-do list</title>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav>
+  <h2 class="logo">Essafi<span>.Dev🌻</span></h2>
+  <ul class="nav-links">
+    <li><a href="#home-section">Home</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- Home Section -->
+<section id="home-section">
+  <div class="text-container">
+    <h2>Welcome to Todo List App</h2>
+    <p>
+      This app helps you organize your tasks efficiently.
+      It allows you to stay focused and keep track of what needs to be done.
+      With a clean and simple interface, managing your daily goals becomes easier and more enjoyable.
+    </p>
+  </div>
+
+  <img class="image" src="{% static 'tasks/WhatsApp_Image_2025-11-25_at_21.23.23-removebg-preview.png' %}" alt="">
+</section>
+
+<!-- Services Section -->
+<section id="services">
+  <h2>Services</h2>
+  <p>We offer Python-based services:</p>
+  <ul>
+    <li class="card">Task automation using Python scripts</li>
+    <li class="card">Data processing and analysis</li>
+    <li class="card">Backend API for your applications</li>
+  </ul>
+</section>
+
+<!-- Todo Section -->
+<section class="todo-section">
+  <h1>To-Do List</h1>
+
+  <!-- Form -->
+  <div class="todo-input">
+    <form action="{% url 'add_task' %}" method="post" style="display:flex; gap:10px; width:100%; justify-content:center;">
+      {% csrf_token %}
+      <input type="text" name="title" id="taskInput" placeholder="Type your task here" required />
+      <button type="submit" id="addBtn">Add</button>
+    </form>
+  </div>
+
+  <p id="message"></p>
+
+  
+  <ul id="taskList">
+    {% for task in tasks %}
+      <li style="display:flex; align-items:center; gap:10px; justify-content:space-between; padding:8px 0;">
+        <div>
+          {% if task.completed %}
+            <s>{{ task.title }}</s>
+          {% else %}
+            {{ task.title }}
+          {% endif %}
+        </div>
+
+        <div style="display:flex; gap:8px; align-items:center;">
+          <!-- Complete toggle (POST form) -->
+          <form action="{% url 'task_complete' task.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" title="Toggle complete" class="small-btn">
+              {% if task.completed %}Undo{% else %}Done{% endif %}
+            </button>
+          </form>
+
+          <!-- Delete (POST form) -->
+          <form action="{% url 'task_delete' task.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" title="Delete" class="small-btn">Delete</button>
+          </form>
+        </div>
+      </li>
+    {% empty %}
+      <li>No tasks yet.</li>
+    {% endfor %}
+  </ul>
+
+  <form method="post" action="{% url 'clear_completed' %}">
+    {% csrf_token %}
+    <button id="clearCompleted" class="clear-btn" type="submit">Clear Completed Tasks</button>
+  </form>
+</section>
+
+<!-- Contact Section -->
+<section id="contact">
+  <h2>Contact Us</h2>
+  <div class="info">
+    <ul class="contact-info-list">
+      <li>
+        <i class="fa-solid fa-location-crosshairs"></i>
+        <p>Boulevard Lion N°1200 Morocco</p>
+      </li>
+      <li>
+        <i class="fa-regular fa-envelope"></i>
+        <p>Info.essafi@email.com</p>
+      </li>
+      <li>
+        <i class="fa-solid fa-phone"></i>
+        <p>+212 658 186 757</p>
+      </li>
+      <li>
+        <i class="fa-solid fa-globe"></i>
+        <p>www.codingdev.com</p>
+      </li>
+    </ul>
+
+    <form action="#" class="contact-form">
+      <input type="text" placeholder="Your name" class="form-input" required>
+      <input type="email" placeholder="Your email" class="form-input" required>
+      <textarea placeholder="Your message" class="form-input" required></textarea>
+      <button class="submit-button">Submit</button>
+    </form>
+
+  </div>
+</section>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer-section">
+  <div class="section-content">
+    <p class="copyright-text">@2025 Wijdane.dev</p>
+    <div class="social-link-list">
+      <a href="#" class="social-link"><i class="fa-brands fa-facebook"></i></a>
+      <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#" class="social-link"><i class="fa-brands fa-twitter"></i></a>
+    </div>
+    <p class="policy-text">
+      <a href="#" class="policy-link">Privacy Policy</a>
+      <span class="separator">.</span>
+      <a href="#" class="policy-link">Refund policy</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+    // Save scroll position before reload
+    window.addEventListener("beforeunload", function () {
+        localStorage.setItem("scrollPosition", window.scrollY);
+    });
+
+    // Restore scroll position
+    window.addEventListener("load", function () {
+        let scroll = localStorage.getItem("scrollPosition");
+        if (scroll) window.scrollTo(0, scroll);
+    });
+</script>
+
+<script src="{% static 'tasks/main.js' %}"></script>
+
+</body>
+</html>

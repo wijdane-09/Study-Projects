@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}My Blog{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+</head>
+
+<body>
+
+    <header>
+        <h1>My Django Blog</h1>
+        <hr>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <script src="{% static 'blog/js/main.js' %}"></script>
+    <form action="{% url 'search' %}" method="GET">
+    <input type="text" name="q" placeholder="Search posts..." />
+</form>
+
+</body>
+</html>
